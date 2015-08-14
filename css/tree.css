@@ -1,0 +1,45 @@
+#tree {
+    background: white;
+    padding: 25px;
+    border-radius: 5px;
+}
+
+.tree {
+
+}
+
+.tree ul.node-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tree .node {
+    padding: 2px;
+}
+
+.tree .node-label {
+    padding: 3px;
+}
+
+.tree .node:not(.leaf) > .node-label {
+    cursor: pointer;
+}
+
+.tree .node:not(.leaf)::before {
+    content: '▶';
+    font-size: 11px;
+}
+
+.tree .node.expanded:not(.leaf)::before {
+    content: '▼';
+    font-size: 11px;
+}
+
+.tree .node-label:hover {
+    background: #EEEEEE;
+}
+
+.tree .node.expanded > .node-label {
+    font-style: italic;
+}
