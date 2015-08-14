@@ -5,5 +5,6 @@ This repo contains a bunch of React.js examples. No server side code, just clien
 
 ### Getting started
 
-* Install Webpack: `npm install -g webpack`
-* Build samples from project root: `webpack`
+* Install Webpack (optional): `npm install -g webpack`
+* Build samples: `webpack`
+* View samples in browser: `open src/index.html`
