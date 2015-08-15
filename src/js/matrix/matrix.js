@@ -3,8 +3,8 @@ const React = require('react');
 const Matrix = React.createClass({
     render() {
         return (
-            <div className="numbers">
-                {this.state.rows.map((row, i) =>
+            <div className="matrix">
+                {this.state.matrix.map((row, i) =>
                     this.renderRow(row, i))}
             </div>
         )
@@ -27,18 +27,20 @@ const Matrix = React.createClass({
     },
 
     getInitialState() {
-        let rows = [
-            [1, 2, 3, 4, 5],
-            [2, 3, 4, 5, 6],
-            [3, 4, 5, 6, 7],
-            [4, 5, 6, 7, 8],
-            [5, 6, 7, 8, 9]
-        ];
-        return {rows};
+        let matrix = [];
+        var size = this.props.size;
+        for (var i = 0; i < size; i++) {
+            let row = [];
+            for (var j = 0; j < size; j++) {
+                row.push(j);
+            }
+            matrix.push(row);
+        }
+        return {matrix};
     }
 });
 
 module.exports = {
     name: 'Matrix',
-    fn: () => <Matrix/>
+    fn: () => <Matrix size={20}/>
 };
