@@ -1,5 +1,5 @@
 const EventEmitter = require('events').EventEmitter;
-const Dispatcher = require('../app-dispatcher');
+const Dispatcher = require('../dispatcher');
 const TreeConstants = require('./tree-constants');
 const assign = require('object-assign');
 

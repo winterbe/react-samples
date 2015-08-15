@@ -8,20 +8,34 @@ module.exports = React.createClass({
         ));
 
         return (
-            <select onChange={this.changeSample}>
+            <select defaultValue={this.state.sample} onChange={this.handleChange}>
                 <option value="-1">Choose...</option>
                 {options}
             </select>
         )
     },
 
-    changeSample(ev) {
+    componentDidMount() {
+        this.showSample(this.state.sample);
+    },
+
+    getInitialState() {
+        let sample = localStorage.getItem("sample") || -1;
+        return {sample};
+    },
+
+    handleChange(ev) {
+        let i = _.parseInt(ev.target.value);
+        this.showSample(i);
+    },
+
+    showSample(i) {
         var container = document.getElementById('content');
         React.unmountComponentAtNode(container);
-        let i = _.parseInt(ev.target.value);
         if (i > -1) {
             let component = this.props.samples[i].fn();
             React.render(component, container);
         }
+        localStorage.setItem("sample", i);
     }
 });

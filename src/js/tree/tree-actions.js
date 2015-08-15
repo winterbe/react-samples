@@ -1,4 +1,4 @@
-const Dispatcher = require('../app-dispatcher');
+const Dispatcher = require('../dispatcher');
 const TreeConstants = require('./tree-constants');
 
 module.exports = {
