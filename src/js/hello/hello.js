@@ -8,7 +8,7 @@ const Hello = React.createClass({
     getInitialState() {
         return {
             time: Date.now(),
-            delay: 500
+            delay: 150
         }
     },
 
