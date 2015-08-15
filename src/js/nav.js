@@ -1,15 +1,15 @@
 const React = require('react');
 const _ = require('lodash');
 
-module.exports = React.createClass({
+const Nav = React.createClass({
     render() {
         let options = this.props.samples.map((sample, i) => (
-            <option value={i}>{sample.name}</option>
+            <option value={i} key={i}>{sample.name}</option>
         ));
 
         return (
             <select defaultValue={this.state.sample} onChange={this.handleChange}>
-                <option value="-1">Choose...</option>
+                <option value="-1" key="-1">Choose...</option>
                 {options}
             </select>
         )
@@ -39,3 +39,5 @@ module.exports = React.createClass({
         localStorage.setItem("sample", i);
     }
 });
+
+module.exports = Nav;
