@@ -66,5 +66,5 @@ const Matrix = React.createClass({
 
 module.exports = {
     name: 'Matrix',
-    fn: () => <Matrix size={16} delay={75}/>
+    fn: () => <Matrix size={8} delay={75}/>
 };
