@@ -1,0 +1,29 @@
+.matrix {
+    border-top: 4px solid #EEE;
+    border-left: 4px solid #EEE;
+    display: inline-block;
+    margin-top: 10px;
+    font-family: "Courier New", monospace;
+    font-weight: 100;
+}
+
+.matrix .row {
+    border-bottom: 4px solid #EEE;
+}
+
+.matrix .cell {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    border-right: 4px solid #EEE;
+}
+
+.matrix .cell.hi {
+    background: #FF4136;
+}
+
+.matrix .cell.lo {
+    background: #2ECC40;
+}

@@ -19,8 +19,14 @@ const Matrix = React.createClass({
     },
 
     renderCell(cell, i, j) {
+        let className = 'cell';
+        if (cell > 90) {
+            className += ' hi';
+        } else if (cell < 30) {
+            className += ' lo';
+        }
         return (
-            <span className="cell" key={`${i}_${j}`}>
+            <span className={className} key={`${i}_${j}`}>
                 {cell}
             </span>
         )
@@ -32,15 +38,33 @@ const Matrix = React.createClass({
         for (var i = 0; i < size; i++) {
             let row = [];
             for (var j = 0; j < size; j++) {
-                row.push(j);
+                row.push(this.random(100));
             }
             matrix.push(row);
         }
         return {matrix};
+    },
+
+    componentDidMount() {
+        this.interval = setInterval(this.updateMatrix, this.props.delay)
+    },
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
+    },
+
+    updateMatrix() {
+        let row = this.state.matrix[this.random(this.props.size) - 1];
+        row[this.random(row.length) - 1] = this.random(100);
+        this.forceUpdate();
+    },
+
+    random(max) {
+        return Math.floor(Math.random() * max) + 1;
     }
 });
 
 module.exports = {
     name: 'Matrix',
-    fn: () => <Matrix size={20}/>
+    fn: () => <Matrix size={16} delay={75}/>
 };
