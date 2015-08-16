@@ -2,7 +2,7 @@
   "name": "react-samples",
   "version": "1.0.0",
   "description": "Just a bunch of React.js examples",
-  "main": "bundle.js",
+  "main": "src/js/app.js",
   "author": "Benjamin Winterberg",
   "license": "MIT",
   "homepage": "http://winterbe.com",
