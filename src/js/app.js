@@ -5,5 +5,6 @@ const samples = [];
 samples.push(require('./hello/hello'));
 samples.push(require('./tree/tree-view'));
 samples.push(require('./matrix/matrix'));
+samples.push(require('./forms/book-view'));
 
 React.render(<Nav samples={samples}/>, document.getElementById("nav"));
