@@ -90,6 +90,7 @@ const NumberInput = React.createClass({
 const BookForm = React.createClass({
     render() {
         let book = this.props.book;
+
         return (
             <form>
                 <h3>Book Details</h3>
@@ -102,15 +103,50 @@ const BookForm = React.createClass({
                 <label>
                     Price: <NumberInput path="price" data={book}/>
                 </label>
+                <h5>Authors</h5>
+                {this.renderAuthors()}
+                <button type="button" onClick={this.addAuthor}>
+                    Add Author
+                </button>
             </form>
         )
+    },
+
+    renderAuthors() {
+        var authors = this.props.book.authors;
+        if (!authors || authors.length === 0) {
+            return <div>No authors</div>;
+        }
+        return authors.map((author, i) => (
+            <div key={`author${i}`}>
+                <label>
+                    Name:
+                    <TextInput path={`authors[${i}].firstName`} data={book}/>
+                    <TextInput path={`authors[${i}].lastName`} data={book}/>
+                    <button type="button" onClick={this.removeAuthor.bind(this, i)}>
+                        Remove
+                    </button>
+                </label>
+            </div>
+        ));
+    },
+
+    addAuthor() {
+        this.props.book.authors.push({firstName: '', lastName: ''});
+        this.forceUpdate();
+    },
+
+    removeAuthor(i) {
+        this.props.book.authors.splice(i);
+        this.forceUpdate();
     }
 });
 
 let book = {
     title: 'A Song of Ice and Fire',
     isbn: '978-0553593716',
-    price: 6.99
+    price: 6.99,
+    authors: [{firstName: 'George R.R.', lastName: 'Martin'}]
 };
 
 module.exports = {
