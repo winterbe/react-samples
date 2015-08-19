@@ -113,7 +113,8 @@ const BookForm = React.createClass({
     },
 
     renderAuthors() {
-        var authors = this.props.book.authors;
+        let book = this.props.book;
+        let authors = book.authors;
         if (!authors || authors.length === 0) {
             return <div>No authors</div>;
         }
