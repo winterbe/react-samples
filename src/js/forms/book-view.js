@@ -25,7 +25,7 @@ const TextInput = React.createClass({
 
     render() {
         return (
-            <input type="text" valueLink={this.linkPath()}/>
+            <input type="text" className="form-control" valueLink={this.linkPath()}/>
         )
     }
 });
@@ -37,6 +37,7 @@ const NumberInput = React.createClass({
         let formattedValue = this.formatNumber(value);
         return (
             <input type="text"
+                   className="form-control"
                    disabled={this.props.disabled}
                    defaultValue={formattedValue}
                    onChange={this.handleChange}
@@ -94,18 +95,21 @@ const BookForm = React.createClass({
         return (
             <form>
                 <h3>Book Details</h3>
-                <label>
-                    Title: <TextInput path="title" data={book}/>
-                </label>
-                <label>
-                    ISBN: <TextInput path="isbn" data={book}/>
-                </label>
-                <label>
-                    Price: <NumberInput path="price" data={book}/>
-                </label>
-                <h5>Authors</h5>
+                <div className="form-group">
+                    <label>Title</label>
+                    <TextInput path="title" data={book}/>
+                </div>
+                <div className="form-group">
+                    <label>ISBN</label>
+                    <TextInput path="isbn" data={book}/>
+                </div>
+                <div className="form-group">
+                    <label>Price</label>
+                    <NumberInput path="price" data={book}/>
+                </div>
+                <h3>Authors</h3>
                 {this.renderAuthors()}
-                <button type="button" onClick={this.addAuthor}>
+                <button type="button" className="btn" onClick={this.addAuthor}>
                     Add Author
                 </button>
             </form>
@@ -115,19 +119,17 @@ const BookForm = React.createClass({
     renderAuthors() {
         let book = this.props.book;
         let authors = book.authors;
-        if (!authors || authors.length === 0) {
-            return <div>No authors</div>;
+        if (!authors || authors.length === 0) {
+            return <div className="text-muted">No authors</div>;
         }
         return authors.map((author, i) => (
-            <div key={`author${i}`}>
-                <label>
-                    Name:
-                    <TextInput path={`authors[${i}].firstName`} data={book}/>
-                    <TextInput path={`authors[${i}].lastName`} data={book}/>
-                    <button type="button" onClick={this.removeAuthor.bind(this, i)}>
-                        Remove
-                    </button>
-                </label>
+            <div className="form-group" key={`author${i}`}>
+                <label>Name</label>
+                <TextInput path={`authors[${i}].firstName`} data={book}/>
+                <TextInput path={`authors[${i}].lastName`} data={book}/>
+                <button type="button" className="btn" onClick={this.removeAuthor.bind(this, i)}>
+                    Remove
+                </button>
             </div>
         ));
     },
@@ -152,5 +154,5 @@ let book = {
 
 module.exports = {
     name: 'Forms',
-    fn: () => <BookForm book={book} />
+    fn: () => <BookForm book={book}/>
 };

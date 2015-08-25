@@ -3,16 +3,18 @@ const _ = require('lodash');
 
 const Nav = React.createClass({
     render() {
-        let options = this.props.samples.map((sample, i) => (
-            <option value={i} key={i}>{sample.name}</option>
-        ));
-
-        return (
-            <select defaultValue={this.state.sample} onChange={this.handleChange}>
-                <option value="-1" key="-1">Choose...</option>
-                {options}
-            </select>
-        )
+        let items = this.props.samples.map((sample, i) => {
+            let className = "";
+            if (this.state.sample == i) {
+                className = 'active';
+            }
+            return (
+                <li role="presentation" className={className} key={i}>
+                    <a href="#" onClick={this.showSample.bind(this, i)}>{sample.name}</a>
+                </li>
+            )
+        });
+        return <ul className="nav nav-pills pull-right">{items}</ul>;
     },
 
     componentDidMount() {
@@ -20,13 +22,8 @@ const Nav = React.createClass({
     },
 
     getInitialState() {
-        let sample = localStorage.getItem("sample") || -1;
+        let sample = localStorage.getItem("sample") || -1;
         return {sample};
-    },
-
-    handleChange(ev) {
-        let i = _.parseInt(ev.target.value);
-        this.showSample(i);
     },
 
     showSample(i) {
@@ -37,6 +34,7 @@ const Nav = React.createClass({
             React.render(component, container);
         }
         localStorage.setItem("sample", i);
+        this.setState({sample: i});
     }
 });
 
