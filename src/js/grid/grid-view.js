@@ -27,12 +27,8 @@ const Grid = React.createClass({
         if (!data || data.length === 0) {
             return [];
         }
-        let filter = this.state.filter;
-        if (!filter) {
-            return data;
-        }
-        let filters = filter.split(' ');
-        return data.filter(obj => {
+        let filters = this.state.filter.split(' ');
+        let dataView = data.filter(obj => {
             for (let i = 0; i < filters.length; i++) {
                 let filter = filters[i];
                 let found = false;
@@ -51,6 +47,25 @@ const Grid = React.createClass({
             }
             return true;
         });
+
+        if (this.state.sort) {
+            let sortKey = this.state.sort.key;
+            let order = this.state.sort.desc ? -1 : 1;
+            dataView.sort((o1, o2) => {
+                let v1 = o1[sortKey];
+                let v2 = o2[sortKey];
+                let result = 0;
+                if (v1 < v2) {
+                    result = -1;
+                }
+                if (v1 > v2) {
+                    result = 1;
+                }
+                return result * order;
+            });
+        }
+
+        return dataView;
     },
 
     onFilterChange(filter) {
@@ -59,13 +74,25 @@ const Grid = React.createClass({
         this.setState({filter});
     },
 
+    onSortChange(column) {
+        let key = column.key;
+        let desc = false;
+        let currentSort = this.state.sort;
+        if (currentSort && currentSort.key === key) {
+            desc = !currentSort.desc;
+        }
+        this.setState({sort: {key, desc}});
+    },
+
     render() {
         let columns = this.state.columns;
         let dataView = this.createDataView();
         return (
             <div className="grid">
                 <Filter onChange={this.onFilterChange}/>
-                <Table columns={columns} dataView={dataView}/>
+                <Table columns={columns}
+                       dataView={dataView}
+                       onSortChange={this.onSortChange}/>
             </div>
         )
     }
@@ -107,12 +134,19 @@ const Table = React.createClass({
         )
     },
 
+    handleSort(column) {
+        this.props.onSortChange(column);
+    },
+
     renderHead(columns) {
+        let style = {cursor: 'pointer'};
         return (
             <thead>
             <tr>
                 {columns.map((col, i) => (
-                    <th key={`head-${i}`}>{col.key}</th>
+                    <th onClick={this.handleSort.bind(this, col)} style={style} key={`head-${i}`}>
+                        {col.key}
+                    </th>
                 ))}
             </tr>
             </thead>
