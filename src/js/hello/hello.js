@@ -28,6 +28,6 @@ const Hello = React.createClass({
 });
 
 module.exports = {
-    name: 'Hello React',
+    name: 'Hello',
     fn: () => <Hello/>
 };
