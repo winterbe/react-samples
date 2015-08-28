@@ -3,53 +3,111 @@ const data = require('./grid-data');
 
 const Grid = React.createClass({
     getInitialState() {
-        let data = this.props.data;
-        let dataView = this.createDataView(data);
-        let columnDef = this.createColumnDef(data);
-        return {dataView, columnDef};
+        let filter = '';
+        let columns = this.createColumns(this.props.data);
+        return {columns, filter};
     },
 
-    createDataView(data) {
+    createColumns(data) {
         if (!data || data.length === 0) {
             return [];
         }
-        return data;
-    },
-
-    createColumnDef(data) {
-        if (!data || data.length === 0) {
-            return [];
-        }
-        let columnDef = [];
+        let columns = [];
         let obj = data[0];
         for (let key in obj) {
             if (obj.hasOwnProperty(key)) {
-                columnDef.push({key});
+                columns.push({key});
             }
         }
-        return columnDef;
+        return columns;
+    },
+
+    createDataView() {
+        let data = this.props.data;
+        if (!data || data.length === 0) {
+            return [];
+        }
+        let filter = this.state.filter;
+        if (!filter) {
+            return data;
+        }
+        let filters = filter.split(' ');
+        return data.filter(obj => {
+            for (let i = 0; i < filters.length; i++) {
+                let filter = filters[i];
+                let found = false;
+                for (let key in obj) {
+                    if (obj.hasOwnProperty(key)) {
+                        let value = String(obj[key]).toLowerCase();
+                        if (value.indexOf(filter) >= 0) {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+                if (!found) {
+                    return false;
+                }
+            }
+            return true;
+        });
+    },
+
+    onFilterChange(filter) {
+        filter = filter.toLowerCase();
+        filter = filter.trim();
+        this.setState({filter});
     },
 
     render() {
-        let columnDef = this.state.columnDef;
-        let dataView = this.state.dataView;
-        if (dataView.length === 0) {
-            return <div className="text-muted">No data</div>
-        }
+        let columns = this.state.columns;
+        let dataView = this.createDataView();
+        return (
+            <div className="grid">
+                <Filter onChange={this.onFilterChange}/>
+                <Table columns={columns} dataView={dataView}/>
+            </div>
+        )
+    }
+});
 
+const Filter = React.createClass({
+    render() {
+        return (
+            <div className="input-group input-group-sm">
+                <span className="input-group-addon">
+                    <span className="glyphicon glyphicon-search"></span>
+                </span>
+                <input type="text" className="form-control" placeholder="Filter..." onChange={this.handleInput}/>
+            </div>
+        )
+    },
+
+    handleInput(ev) {
+        let term = ev.target.value;
+        this.props.onChange(term);
+    }
+});
+
+const Table = React.createClass({
+    render() {
+        let dataView = this.props.dataView;
+        if (!dataView || dataView.length === 0) {
+            return <div className="text-muted">No data</div>;
+        }
         return (
             <table className="table">
-                {this.renderHead(columnDef)}
-                {this.renderBody(columnDef, dataView)}
+                {this.renderHead(this.props.columns)}
+                {this.renderBody(this.props.columns, this.props.dataView)}
             </table>
         )
     },
 
-    renderHead(columnDef) {
+    renderHead(columns) {
         return (
             <thead>
             <tr>
-                {columnDef.map((col, i) => (
+                {columns.map((col, i) => (
                     <th key={`head-${i}`}>{col.key}</th>
                 ))}
             </tr>
@@ -57,19 +115,19 @@ const Grid = React.createClass({
         )
     },
 
-    renderBody(columnDef, dataView) {
+    renderBody(columns, dataView) {
         return (
             <tbody>
             {dataView.map((row, i) =>
-                this.renderRow(row, i, columnDef))}
+                this.renderRow(row, i, columns))}
             </tbody>
         )
     },
 
-    renderRow(row, i, columnDef) {
+    renderRow(row, i, columns) {
         return (
             <tr key={`row-${i}`}>
-                {columnDef.map((def, j) => (
+                {columns.map((def, j) => (
                     <td key={`col-${j}`}>
                         {row[def.key]}
                     </td>
