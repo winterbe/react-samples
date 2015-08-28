@@ -74,11 +74,11 @@ const Grid = React.createClass({
 const Filter = React.createClass({
     render() {
         return (
-            <div className="input-group input-group-sm">
+            <div className="input-group input-group-sm" style={{marginBottom: 15}}>
                 <span className="input-group-addon">
                     <span className="glyphicon glyphicon-search"></span>
                 </span>
-                <input type="text" className="form-control" placeholder="Filter..." onChange={this.handleInput}/>
+                <input ref="input" type="text" className="form-control" placeholder="Filter..." onChange={this.handleInput}/>
             </div>
         )
     },
@@ -86,6 +86,10 @@ const Filter = React.createClass({
     handleInput(ev) {
         let term = ev.target.value;
         this.props.onChange(term);
+    },
+
+    componentDidMount() {
+        React.findDOMNode(this.refs.input).focus();
     }
 });
 
@@ -96,7 +100,7 @@ const Table = React.createClass({
             return <div className="text-muted">No data</div>;
         }
         return (
-            <table className="table">
+            <table className="table table-striped">
                 {this.renderHead(this.props.columns)}
                 {this.renderBody(this.props.columns, this.props.dataView)}
             </table>
