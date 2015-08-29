@@ -4,11 +4,11 @@
     -webkit-user-select: none;
 }
 
-.grid thead th:hover {
-    border-bottom: 2px solid #337AB7;
-}
-
 .grid thead th.sorted {
     font-style: italic;
     border-bottom: 2px solid #777;
+}
+
+.grid thead th:hover {
+    border-bottom: 2px solid #337AB7;
 }
