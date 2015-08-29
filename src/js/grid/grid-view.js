@@ -92,6 +92,7 @@ const Grid = React.createClass({
                 <Filter onChange={this.onFilterChange}/>
                 <Table columns={columns}
                        dataView={dataView}
+                       sort={this.state.sort}
                        onSortChange={this.onSortChange}/>
             </div>
         )
@@ -128,7 +129,7 @@ const Table = React.createClass({
         }
         return (
             <table className="table table-striped">
-                {this.renderHead(this.props.columns)}
+                {this.renderHead(this.props.columns, this.props.sort || {})}
                 {this.renderBody(this.props.columns, this.props.dataView)}
             </table>
         )
@@ -138,13 +139,14 @@ const Table = React.createClass({
         this.props.onSortChange(column);
     },
 
-    renderHead(columns) {
-        let style = {cursor: 'pointer'};
+    renderHead(columns, sort) {
         return (
             <thead>
             <tr>
                 {columns.map((col, i) => (
-                    <th onClick={this.handleSort.bind(this, col)} style={style} key={`head-${i}`}>
+                    <th onClick={this.handleSort.bind(this, col)}
+                        className={sort.key == col.key ? 'sorted' : ''}
+                        key={`head-${i}`}>
                         {col.key}
                     </th>
                 ))}
