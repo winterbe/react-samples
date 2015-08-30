@@ -131,13 +131,9 @@ const Table = React.createClass({
         return (
             <table className="table">
                 {this.renderHead(this.props.columns, this.props.sort || {})}
-                {this.renderBody(this.props.columns, this.props.dataView)}
+                {this.renderGroups(this.props.columns, this.props.dataView)}
             </table>
         )
-    },
-
-    handleSort(column) {
-        this.props.onSortChange(column);
     },
 
     renderHead(columns, sort) {
@@ -156,34 +152,41 @@ const Table = React.createClass({
         )
     },
 
-    renderBody(columns, dataView) {
-        let rows = [];
+    renderGroups(columns, dataView) {
+        let groups = [];
         for (let key in dataView) {
             if (dataView.hasOwnProperty(key)) {
-                let groupRows = this.renderGroup(key, dataView[key], columns);
-                rows = rows.concat(groupRows);
+                groups.push(<Group key={key}
+                                   val={key}
+                                   group={dataView[key]}
+                                   columns={columns}/>);
             }
         }
-        return (
-            <tbody>
-            {rows}
-            </tbody>
-        )
+        return groups;
     },
 
-    renderGroup(key, group, columns) {
+    handleSort(column) {
+        this.props.onSortChange(column);
+    }
+});
+
+const Group = React.createClass({
+    render() {
+        let group = this.props.group;
+        let val = this.props.val;
+        let columns = this.props.columns;
         if (group.length === 0) {
-            return [];
+            return <tbody></tbody>;
         }
-        let rows = group.map((row, i) => this.renderRow(row, key + i, columns));
+        let rows = group.map((row, i) => this.renderRow(row, val + i, columns));
         rows.unshift((
-            <tr>
+            <tr key={`label-${val}`}>
                 <td className="group-label" colSpan={columns.length}>
-                    Age: {key}
+                    age: {val}
                 </td>
             </tr>
         ));
-        return rows;
+        return <tbody>{rows}</tbody>;
     },
 
     renderRow(row, key, columns) {

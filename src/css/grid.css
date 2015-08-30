@@ -19,3 +19,7 @@
     line-height: 10px;
     font-weight: bold;
 }
+
+.grid .table tbody + tbody {
+    border-top: none;
+}
