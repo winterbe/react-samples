@@ -12,3 +12,10 @@
 .grid thead th:hover {
     border-bottom: 2px solid #337AB7;
 }
+
+.grid tbody .group-label {
+    background-color: #F9F9F9;
+    font-size: 11px;
+    line-height: 10px;
+    font-weight: bold;
+}

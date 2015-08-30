@@ -1,4 +1,5 @@
 const React = require('react');
+const Stream = require('streamjs');
 const data = require('./grid-data');
 
 const Grid = React.createClass({
@@ -65,7 +66,7 @@ const Grid = React.createClass({
             });
         }
 
-        return dataView;
+        return Stream(dataView).groupBy('age');
     },
 
     onFilterChange(filter) {
@@ -128,7 +129,7 @@ const Table = React.createClass({
             return <div className="text-muted">No data</div>;
         }
         return (
-            <table className="table table-striped">
+            <table className="table">
                 {this.renderHead(this.props.columns, this.props.sort || {})}
                 {this.renderBody(this.props.columns, this.props.dataView)}
             </table>
@@ -156,17 +157,38 @@ const Table = React.createClass({
     },
 
     renderBody(columns, dataView) {
+        let rows = [];
+        for (let key in dataView) {
+            if (dataView.hasOwnProperty(key)) {
+                let groupRows = this.renderGroup(key, dataView[key], columns);
+                rows = rows.concat(groupRows);
+            }
+        }
         return (
             <tbody>
-            {dataView.map((row, i) =>
-                this.renderRow(row, i, columns))}
+            {rows}
             </tbody>
         )
     },
 
-    renderRow(row, i, columns) {
+    renderGroup(key, group, columns) {
+        if (group.length === 0) {
+            return [];
+        }
+        let rows = group.map((row, i) => this.renderRow(row, key + i, columns));
+        rows.unshift((
+            <tr>
+                <td className="group-label" colSpan={columns.length}>
+                    Age: {key}
+                </td>
+            </tr>
+        ));
+        return rows;
+    },
+
+    renderRow(row, key, columns) {
         return (
-            <tr key={`row-${i}`}>
+            <tr key={key}>
                 {columns.map((def, j) => (
                     <td key={`col-${j}`}>
                         {row[def.key]}
