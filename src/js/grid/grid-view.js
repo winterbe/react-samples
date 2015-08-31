@@ -5,8 +5,10 @@ const data = require('./grid-data');
 const Grid = React.createClass({
     getInitialState() {
         let filter = '';
+        let group = 'gender';
+        let sort = {key: 'name', desc: false};
         let columns = this.createColumns(this.props.data);
-        return {columns, filter};
+        return {columns, filter, group, sort};
     },
 
     createColumns(data) {
@@ -23,50 +25,55 @@ const Grid = React.createClass({
         return columns;
     },
 
-    createDataView() {
-        let data = this.props.data;
-        if (!data || data.length === 0) {
-            return [];
-        }
-        let filters = this.state.filter.split(' ');
-        let dataView = data.filter(obj => {
-            for (let i = 0; i < filters.length; i++) {
-                let filter = filters[i];
-                let found = false;
-                for (let key in obj) {
-                    if (obj.hasOwnProperty(key)) {
-                        let value = String(obj[key]).toLowerCase();
-                        if (value.indexOf(filter) >= 0) {
-                            found = true;
-                            break;
+    applyDataView() {
+        let {filter, group, sort} = this.state;
+        let filters = filter ? filter.split(' ') : [];
+
+        let dataView = Stream(this.props.data)
+            .filter(obj => {
+                for (let i = 0; i < filters.length; i++) {
+                    let filter = filters[i];
+                    let found = false;
+                    for (let key in obj) {
+                        if (obj.hasOwnProperty(key)) {
+                            let value = String(obj[key]).toLowerCase();
+                            if (value.indexOf(filter) >= 0) {
+                                found = true;
+                                break;
+                            }
                         }
                     }
+                    if (!found) {
+                        return false;
+                    }
                 }
-                if (!found) {
-                    return false;
+                return true;
+            })
+            .groupBy(group);
+
+        if (sort) {
+            let sortKey = sort.key;
+            let order = sort.desc ? -1 : 1;
+            for (let key in dataView) {
+                if (dataView.hasOwnProperty(key)) {
+                    let array = dataView[key];
+                    array.sort((o1, o2) => {
+                        let v1 = o1[sortKey];
+                        let v2 = o2[sortKey];
+                        let result = 0;
+                        if (v1 < v2) {
+                            result = -1;
+                        }
+                        if (v1 > v2) {
+                            result = 1;
+                        }
+                        return result * order;
+                    });
                 }
             }
-            return true;
-        });
-
-        if (this.state.sort) {
-            let sortKey = this.state.sort.key;
-            let order = this.state.sort.desc ? -1 : 1;
-            dataView.sort((o1, o2) => {
-                let v1 = o1[sortKey];
-                let v2 = o2[sortKey];
-                let result = 0;
-                if (v1 < v2) {
-                    result = -1;
-                }
-                if (v1 > v2) {
-                    result = 1;
-                }
-                return result * order;
-            });
         }
 
-        return Stream(dataView).groupBy('age');
+        return dataView;
     },
 
     onFilterChange(filter) {
@@ -87,13 +94,15 @@ const Grid = React.createClass({
 
     render() {
         let columns = this.state.columns;
-        let dataView = this.createDataView();
+        let dataView = this.applyDataView();
         return (
             <div className="grid">
-                <Filter onChange={this.onFilterChange}/>
+                <Filter filter={this.state.filter}
+                        onChange={this.onFilterChange}/>
                 <Table columns={columns}
                        dataView={dataView}
                        sort={this.state.sort}
+                       group={this.state.group}
                        onSortChange={this.onSortChange}/>
             </div>
         )
@@ -107,7 +116,7 @@ const Filter = React.createClass({
                 <span className="input-group-addon">
                     <span className="glyphicon glyphicon-search"></span>
                 </span>
-                <input ref="input" type="text" className="form-control" placeholder="Filter..." onChange={this.handleInput}/>
+                <input ref="input" type="text" className="form-control" placeholder="Filter..." onChange={this.handleInput} defaultValue={this.props.filter}/>
             </div>
         )
     },
@@ -158,6 +167,7 @@ const Table = React.createClass({
             if (dataView.hasOwnProperty(key)) {
                 groups.push(<Group key={key}
                                    val={key}
+                                   groupName={this.props.group}
                                    group={dataView[key]}
                                    columns={columns}/>);
             }
@@ -182,7 +192,7 @@ const Group = React.createClass({
         rows.unshift((
             <tr key={`label-${val}`}>
                 <td className="group-label" colSpan={columns.length}>
-                    age: {val}
+                    {this.props.groupName}: {val}
                 </td>
             </tr>
         ));
