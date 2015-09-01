@@ -2,7 +2,17 @@ const React = require('react');
 
 const Hello = React.createClass({
     render() {
-        return <h1>Hello React: {this.state.time}</h1>;
+        return (
+            <div className="jumbotron">
+                <h1>React Samples</h1>
+                <p className="lead">
+                    Welcome to my React.js Examples project.
+                </p>
+                <p>
+                    Unix Time: {this.state.time}
+                </p>
+            </div>
+        )
     },
 
     getInitialState() {
