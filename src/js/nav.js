@@ -22,7 +22,7 @@ const Nav = React.createClass({
     },
 
     getInitialState() {
-        let sample = localStorage.getItem("sample") || -1;
+        let sample = localStorage.getItem("sample") || 0;
         return {sample};
     },
 
