@@ -12,14 +12,14 @@ const Matrix = React.createClass({
 
     renderRow(row, i) {
         return (
-            <div className="row" key={i}>
+            <div className="mrow" key={i}>
                 {row.map((cell, j) => this.renderCell(cell, i, j))}
             </div>
         )
     },
 
     renderCell(cell, i, j) {
-        let className = 'cell';
+        let className = 'mcell';
         if (cell > 90) {
             className += ' hi';
         } else if (cell < 30) {
@@ -66,5 +66,5 @@ const Matrix = React.createClass({
 
 module.exports = {
     name: 'Matrix',
-    fn: () => <Matrix size={8} delay={75}/>
+    fn: () => <Matrix size={12} delay={15}/>
 };

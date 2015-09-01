@@ -7,11 +7,11 @@
     font-weight: 100;
 }
 
-.matrix .row {
+.matrix .mrow {
     border-bottom: 4px solid #EEE;
 }
 
-.matrix .cell {
+.matrix .mcell {
     display: inline-block;
     width: 30px;
     height: 30px;
@@ -20,10 +20,10 @@
     border-right: 4px solid #EEE;
 }
 
-.matrix .cell.hi {
+.matrix .mcell.hi {
     background: #FF4136;
 }
 
-.matrix .cell.lo {
+.matrix .mcell.lo {
     background: #2ECC40;
 }
