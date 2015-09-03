@@ -3,9 +3,11 @@ React.js Examples
 
 This repo contains a bunch of React.js examples. No server side code, just client-side React components. 
 
-> Make sure you have NPM and Webpack installed before getting started.
+### [Live Demo](http://winterbe.com/projects/react-samples/)
 
 ### Getting started
+
+> Make sure you have NPM and Webpack installed before getting started.
 
 * Install: `npm install`
 * Build: `webpack --watch`
